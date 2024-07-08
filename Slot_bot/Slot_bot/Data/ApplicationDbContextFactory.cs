@@ -1,15 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Slot_bot.Data
 {
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
-        IConfiguration configuration;
-        public ApplicationDbContextFactory(IConfiguration configuration)
+        IConfigurationRoot configuration;
+
+        public ApplicationDbContextFactory(IConfigurationRoot configuration)
         {
             this.configuration = configuration;
+        }
+        public ApplicationDbContextFactory()
+        {
+                
         }
         public ApplicationDbContext CreateDbContext(string[] args)
         {

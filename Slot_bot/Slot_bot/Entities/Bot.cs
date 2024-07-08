@@ -7,18 +7,22 @@ namespace Slot_bot.Entities
 {
     public class Bot
     {
-        private DiscordSocketClient client;
-        private string token;
-        private  ILogger<Bot> logger;
-        private IServiceProvider serviceProvider;
-        public Bot(ILogger<Bot> logger, IServiceProvider serviceProvider, IConfiguration configuration)
+        DiscordSocketClient client;
+        string token;
+        ILogger<Bot> logger;
+
+        public Bot(ILogger<Bot> logger, IConfiguration configuration)
         {
             client = new DiscordSocketClient();
-            this.serviceProvider = serviceProvider;
             this.token = configuration.GetSection("BotConfiguration")["BotToken"];
             this.logger = logger;
+            client.Log += Log;
         }
 
+        private async Task Log(LogMessage message)
+        {
+            Console.WriteLine(message.ToString());
+        }
 
         public async Task RunAsync()
         {

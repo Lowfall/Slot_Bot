@@ -9,5 +9,10 @@ namespace Slot_bot.Data.UnitOfWork.Repositories
         {
                 
         }
+
+        public async Task<bool> IsUserExistAsync(ulong id)
+        {
+            return table.Find(id) is null ? false : true;
+        }
     }
 }
