@@ -14,7 +14,7 @@ namespace Slot_bot.Data.UnitOfWork.Repositories
         }
         public async Task AddAsync(T entity)
         {
-             await table.AddAsync(entity);
+             table.Add(entity);
              await dbContext.SaveChangesAsync();
         }
 
@@ -31,7 +31,7 @@ namespace Slot_bot.Data.UnitOfWork.Repositories
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return table.Find(id);
+            return await table.FindAsync(id);
         }
 
         public async Task UpdateAsync(T entity)

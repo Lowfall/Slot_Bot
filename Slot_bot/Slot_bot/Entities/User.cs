@@ -5,8 +5,8 @@ namespace Slot_bot.Entities
     public class User
     {
         [Key]
-        public ulong Id { get; set; }  
+        public string Id { get; set; }  
         public string Username { get; set; }
-        public int ScoreAmount { get; set; } = 500;
+        public int Balance { get; set; } = 500;
     }
 }

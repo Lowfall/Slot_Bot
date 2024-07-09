@@ -4,6 +4,6 @@ namespace Slot_bot.Data.Interfaces
 {
     public interface IUserRepository : IGeneralRepository<User>
     {
-        Task<bool> IsUserExistAsync(ulong id);
+        Task<User> IsUserExistAsync(string id);
     }
 }

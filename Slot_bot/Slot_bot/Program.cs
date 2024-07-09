@@ -32,7 +32,8 @@ namespace Program {
                     services.AddSingleton(x => new DiscordSocketClient(new DiscordSocketConfig()
                     {
                         GatewayIntents = GatewayIntents.All,
-                        AlwaysDownloadUsers = true
+                        AlwaysDownloadUsers = true,
+                        UseInteractionSnowflakeDate = false
                     }));
                     services.AddDbContext<ApplicationDbContext>(options =>
                      {
