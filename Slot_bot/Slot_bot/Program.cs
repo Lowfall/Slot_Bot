@@ -14,7 +14,8 @@ using Slot_bot.Services;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
-namespace Program { 
+namespace Program
+{
     class Program
     {
         public static Task Main() => new Program().MainAsync();
@@ -41,6 +42,8 @@ namespace Program {
                      });
                     services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
                     services.AddSingleton<InteractionHandler>();
+                    services.AddSingleton(x => new SlotAppearanceService());
+                    services.AddSingleton(x => new ButtonsHandler(x.GetRequiredService<IUnitOfWork>(),x.GetRequiredService<SlotAppearanceService>()));
                     services.AddSingleton(x => new CommandService());
                     services.AddSingleton<PrefixHandler>();
                     services.AddSingleton<IUnitOfWork,UnitOfWork>();
@@ -67,6 +70,7 @@ namespace Program {
 
 
             client.Log += async (LogMessage message) => Console.WriteLine(message);
+            client.ButtonExecuted += serviceProvider.GetRequiredService<ButtonsHandler>().ButtonClickHandler;
             slashCommands.Log += async (LogMessage message) => Console.WriteLine(message);
 
             client.Ready += async () =>
@@ -80,5 +84,6 @@ namespace Program {
 
             await Task.Delay(-1);
         }
+
     }
 }
