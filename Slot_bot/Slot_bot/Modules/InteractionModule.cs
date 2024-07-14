@@ -9,8 +9,8 @@ namespace Slot_bot.Modules
     public class InteractionModule : InteractionModuleBase<SocketInteractionContext>
     {
         IUnitOfWork unitOfWork;
-        SlotAppearanceService appearanceService;
-        public InteractionModule( IUnitOfWork unitOfWork, SlotAppearanceService appearanceService)
+        SlotService appearanceService;
+        public InteractionModule( IUnitOfWork unitOfWork, SlotService appearanceService)
         {
             this.unitOfWork = unitOfWork;   
             this.appearanceService = appearanceService;
@@ -21,19 +21,21 @@ namespace Slot_bot.Modules
         {
             appearanceService.SpinSlot();
             var user =await  unitOfWork.UserRepository.IsUserExistAsync(Context.User.Id.ToString());
+            if (user is null)
+            {
+                user = new User() { Id = Context.User.Id.ToString(), Username = Context.User.GlobalName, Balance = 500 };
+                await unitOfWork.UserRepository.AddAsync(user);
+            }
             var embed = new EmbedBuilder()
-                .WithTitle("🎰🎰🎰🎰🎰🎰🎰🎰 Slots 🎰🎰🎰🎰🎰🎰🎰🎰")
-                .WithColor(Color.DarkRed)
-                .WithDescription(appearanceService.ToString())
-                .WithFooter($"Balance - {user.Balance}  \t\t\t\t\t\t\t\t Player - {user.Username}         SlotBot v1.0.0")
-                .Build();
+                    .WithTitle("Slots")
+                    .WithColor(Color.Magenta)
+                    .WithDescription(appearanceService.ToString())
+                    .WithFooter($"Balance:  {user.Balance} \t Player - {user.Username}")
+                    .Build();
             var componentBuilder = new ComponentBuilder()
                 .WithButton("Spin", "spin", ButtonStyle.Success)
                 .Build();
-            if (user is  null)
-            {
-                await unitOfWork.UserRepository.AddAsync(new User() { Id = Context.User.Id.ToString(), Username = Context.User.GlobalName, Balance = 500 });
-            }
+            
             await RespondAsync(embed: embed, components: componentBuilder,text:$"Lets gamble!");
         }
 

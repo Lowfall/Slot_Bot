@@ -42,8 +42,8 @@ namespace Program
                      });
                     services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
                     services.AddSingleton<InteractionHandler>();
-                    services.AddSingleton(x => new SlotAppearanceService());
-                    services.AddSingleton(x => new ButtonsHandler(x.GetRequiredService<IUnitOfWork>(),x.GetRequiredService<SlotAppearanceService>()));
+                    services.AddSingleton(x => new SlotService());
+                    services.AddSingleton(x => new ButtonsHandler(x.GetRequiredService<IUnitOfWork>(),x.GetRequiredService<SlotService>()));
                     services.AddSingleton(x => new CommandService());
                     services.AddSingleton<PrefixHandler>();
                     services.AddSingleton<IUnitOfWork,UnitOfWork>();

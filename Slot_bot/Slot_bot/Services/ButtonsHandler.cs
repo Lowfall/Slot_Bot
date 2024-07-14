@@ -13,8 +13,8 @@ namespace Slot_bot.Services
     public class ButtonsHandler
     {
         IUnitOfWork unitOfWork;
-        SlotAppearanceService appearanceService;
-        public ButtonsHandler(IUnitOfWork unitOfWork, SlotAppearanceService appearanceService)
+        SlotService appearanceService;
+        public ButtonsHandler(IUnitOfWork unitOfWork, SlotService appearanceService)
         {
             this.unitOfWork = unitOfWork;  
             this.appearanceService = appearanceService;
@@ -27,15 +27,29 @@ namespace Slot_bot.Services
             if (component.Data.CustomId == "spin")
             {
 
-                user.Balance -= 5;
+                
                 appearanceService.SpinSlot();
-                var embed = new EmbedBuilder()
-                    .WithTitle("🎰🎰🎰🎰🎰🎰🎰🎰 Slots 🎰🎰🎰🎰🎰🎰🎰🎰")
-                    .WithColor(Color.Green)
-                    .WithDescription(appearanceService.ToString())
-                    .WithFooter($"Balance - {user.Balance}  \t\t\t\t\t\t Player - {user.Username}         SlotBot v1.0.0")
+                var result = appearanceService.IsWinningCombination(-5);
+                user.Balance += result;
+                Embed embed;
+                if (result < 0)
+                {
+                    embed = new EmbedBuilder()
+                    .WithTitle("Slots")
+                    .WithColor(Color.Red)
+                    .WithDescription(appearanceService.ToString() + $"\nYou lose!")
+                    .WithFooter($"Balance:  {user.Balance} \t Player - {user.Username}")
                     .Build();
-
+                }
+                else
+                {
+                    embed = new EmbedBuilder()
+                    .WithTitle("Slots")
+                    .WithColor(Color.Green)
+                    .WithDescription(appearanceService.ToString() + $"\nYou win {result} $")
+                    .WithFooter($"Balance:  {user.Balance} \t Player - {user.Username}")
+                    .Build();
+                }
                 var componentBuilder = new ComponentBuilder()
                     .WithButton("Spin", "spin", ButtonStyle.Success)
                     .Build();
